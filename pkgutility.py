@@ -3,7 +3,7 @@ import getpass
 import os
 import sys
 import tempfile
-
+import re
 
 def get_password():
     """
@@ -35,7 +35,7 @@ def get_all_requirements(user, ghuser, file):
             for data in file_content.decoded.split('\n'):
                 if not data.startswith('#') and not (data == ''):
                     if not data.startswith('http') and not data.startswith('-e'):
-                        repo_pkg.append(split_string(data))
+                        repo_pkg.append(split_string2(data))
 
             reqr.update({repo:repo_pkg})
 
@@ -68,6 +68,18 @@ def split_string(string):
     else:
         return string
 
+def split_string2(string):
+    """
+    Remove version number from a package(the regex way)
+    Based on package naming convention
+    """
+    pattern = "^[a-zA-Z0-9\+._-]*"
+    match = re.search(pattern, string)
+    start = match.start()
+    end = match.end()
+    return string[start:end]
+
+
 def generate_requirements(reqr_dict, ghuser):
     """
     Generate a final requirements file
@@ -93,6 +105,3 @@ if __name__ == '__main__':
         generate_requirements(reqr_dict, sys.argv[2])
     else:
         print "Usage: python pkgutility.py <github username> openstack test-requirements.txt"
-
-
-
