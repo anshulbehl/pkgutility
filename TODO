@@ -1,0 +1,2 @@
+[1.] Integrate with Fedora Koji to find which are not packaged in Fedora.
+[2.] use pip to find package information like tarball URL
